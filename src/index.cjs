@@ -1,11 +1,14 @@
 const fastify = require("fastify");
 const serverOptions = {
-  logger: {
-    level: "debug",
-    transport: {
-      target: "pino-pretty",
-    },
-  },
+  logger:
+    process.env.NODE_ENV === "development"
+      ? {
+          level: "debug",
+          transport: {
+            target: "pino-pretty",
+          },
+        }
+      : true,
 };
 
 class Workout {

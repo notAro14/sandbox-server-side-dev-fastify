@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.cjs",
   "scripts": {
-    "dev": "node --watch src/index.cjs"
+    "dev": "node --watch src/index.cjs",
+    "start": "NODE_ENV=production node src/index.cjs"
   },
   "keywords": [],
   "author": "Aro Andriamaro",
