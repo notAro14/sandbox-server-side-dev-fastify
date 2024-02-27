@@ -3,10 +3,22 @@ const serverOptions = {
   logger: true,
 };
 
+class Workout {
+  constructor(title) {
+    this.title = title;
+  }
+
+  toJSON() {
+    return {
+      title: this.title,
+    };
+  }
+}
+
 async function main() {
   const app = fastify(serverOptions);
   app.get("/", async () => {
-    return { hello: "world" };
+    return new Workout("My Workout");
   });
 
   await app.listen({
