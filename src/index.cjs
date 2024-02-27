@@ -2,12 +2,17 @@ const fastify = require("fastify");
 const serverOptions = {
   logger: true,
 };
-const app = fastify(serverOptions);
-app
-  .listen({
+
+async function main() {
+  const app = fastify(serverOptions);
+  await app.listen({
     port: 8080,
     host: "0.0.0.0",
-  })
-  .then((address) => {
-    console.log(`Server listening on ${address}`);
   });
+
+  app.log.debug(app.initialConfig, "Fastify listening with the config");
+  const port = app.server.address().port;
+  app.log.info("HTTP Server port is %i", port);
+}
+
+main();
