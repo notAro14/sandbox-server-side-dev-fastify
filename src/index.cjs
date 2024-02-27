@@ -1,6 +1,11 @@
 const fastify = require("fastify");
 const serverOptions = {
-  logger: true,
+  logger: {
+    level: "debug",
+    transport: {
+      target: "pino-pretty",
+    },
+  },
 };
 
 class Workout {
@@ -28,6 +33,7 @@ async function main() {
 
   const port = app.server.address().port;
   app.log.info("HTTP Server port is %i", port);
+  // app.log.debug(app.initialConfig, "Server config");
 }
 
 main();
