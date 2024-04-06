@@ -19,7 +19,7 @@ async function main() {
   });
 
   await app.listen({
-    port: 8080,
+    port: 0,
     host: "0.0.0.0",
   });
 
