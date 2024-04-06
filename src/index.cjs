@@ -1,4 +1,5 @@
 const fastify = require("fastify");
+const { Workout } = require("./workout.cjs");
 const serverOptions = {
   logger:
     process.env.NODE_ENV === "development"
@@ -10,18 +11,6 @@ const serverOptions = {
         }
       : true,
 };
-
-class Workout {
-  constructor(title) {
-    this.title = title;
-  }
-
-  toJSON() {
-    return {
-      title: this.title,
-    };
-  }
-}
 
 async function main() {
   const app = fastify(serverOptions);
