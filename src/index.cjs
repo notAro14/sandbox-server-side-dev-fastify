@@ -1,16 +1,11 @@
 const fastify = require("fastify");
+const closeWithGrace = require("close-with-grace");
 const { Workout } = require("./workout.cjs");
 const serverOptions = {
-  logger:
-    process.env.NODE_ENV === "development"
-      ? {
-          level: "debug",
-          transport: {
-            target: "pino-pretty",
-          },
-        }
-      : true,
+  logger: { level: "info" },
 };
+if (process.stdout.isTTY)
+  serverOptions.logger.transport = { target: "pino-pretty" };
 
 async function main() {
   const app = fastify(serverOptions);
@@ -45,7 +40,28 @@ async function main() {
 
   const port = app.server.address().port;
   app.log.info("HTTP Server port is %i", port);
-  // app.log.debug(app.initialConfig, "Server config");
+
+  closeWithGrace(async ({ signal, err }) => {
+    if (err) {
+      app.log.error({ err }, "server closing due to error");
+    } else {
+      app.log.info(`${signal} received, server closing`);
+    }
+    await app.close();
+  });
+
+  // ---- OR ----
+  // function closeApplication() {
+  //   app.close(function closeComplete(err) {
+  //     if (err) {
+  //       app.log.error(err, "error turning off");
+  //     } else {
+  //       app.log.info("bye bye");
+  //     }
+  //   });
+  // }
+  // process.on("SIGINT");
+  // process.on("SIGTERM", closeApplication);
 }
 
 main();
