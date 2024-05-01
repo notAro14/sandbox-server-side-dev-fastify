@@ -35,6 +35,19 @@ async function main() {
       return new Workout("My Workout");
     },
   });
+  const cats = [];
+  app.post("/cat", function saveCat(req, reply) {
+    cats.push(req.body);
+    reply.code(201).send({ allCats: cats });
+  });
+  app.get("/cat/:catName", function readCat(req, reply) {
+    const lookingFor = req.params.catName;
+    const result = cats.find((cat) => cat.name === lookingFor);
+    if (result) return { cat: result };
+
+    reply.code(404);
+    throw new Error(`cat ${lookingFor} not found`);
+  });
   app.addHook("onSend", async () => {
     app.log.info("onSend");
   });
