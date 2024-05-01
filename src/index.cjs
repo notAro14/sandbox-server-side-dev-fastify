@@ -14,12 +14,33 @@ const serverOptions = {
 
 async function main() {
   const app = fastify(serverOptions);
-  app.get("/", async () => {
-    return new Workout("My Workout");
+
+  app.addHook("onReady", function preLoading(done) {
+    app.log.info("onReady");
+    done();
+  });
+  app.addHook("onRoute", async () => {
+    app.log.info("onRoute");
+  });
+  app.addHook("preSerialization", async () => {
+    app.log.info("preSerialization");
+  });
+  app.addHook("onResponse", async () => {
+    app.log.info("onResponse");
+  });
+  app.route({
+    url: "/",
+    method: "GET",
+    handler: async () => {
+      return new Workout("My Workout");
+    },
+  });
+  app.addHook("onSend", async () => {
+    app.log.info("onSend");
   });
 
   await app.listen({
-    port: 0,
+    port: 8080,
     host: "0.0.0.0",
   });
 
