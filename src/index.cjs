@@ -15,23 +15,12 @@ const serverOptions = {
 async function main() {
   const app = fastify(serverOptions);
 
-  app.addHook("onReady", function preLoading(done) {
-    app.log.info("onReady");
-    done();
-  });
-  app.addHook("onRoute", async () => {
-    app.log.info("onRoute");
-  });
-  app.addHook("preSerialization", async () => {
-    app.log.info("preSerialization");
-  });
-  app.addHook("onResponse", async () => {
-    app.log.info("onResponse");
-  });
   app.route({
     url: "/",
     method: "GET",
-    handler: async () => {
+    handler: async (req, reply) => {
+      reply.log.info("handler log");
+      app.log.info("app log");
       return new Workout("My Workout");
     },
   });
@@ -47,9 +36,6 @@ async function main() {
 
     reply.code(404);
     throw new Error(`cat ${lookingFor} not found`);
-  });
-  app.addHook("onSend", async () => {
-    app.log.info("onSend");
   });
 
   await app.listen({
